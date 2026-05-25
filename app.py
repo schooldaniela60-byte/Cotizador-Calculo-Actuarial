@@ -375,7 +375,7 @@ with tab1:
 
     with col2:
 
-        n, m, t = None, None, None, None
+        n, m, t = None, None, None
 
         if tipo_seguro in ["Temporal", "Diferido temporal"]:
             n = st.number_input("Temporalidad (n)", min_value=1, value=20)
