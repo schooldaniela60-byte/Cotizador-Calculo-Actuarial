@@ -374,24 +374,23 @@ with tab1:
 
 
     with col2:
-        n, m, k, t = None, None, None, None
+
+        n, m, t = None, None, None, None
 
         if tipo_seguro in ["Temporal", "Diferido temporal"]:
             n = st.number_input("Temporalidad (n)", min_value=1, value=20)
 
         if tipo_seguro in ["Dotal puro", "Dotal mixto"]:
-            n = st.number_input("Temporalidad (n)", min_value=1, value=20)
+            n = st.number_input("Temporalidad (n) — máx. hasta edad 65", min_value=1, value=20)
 
-        if tipo_seguro in ["Diferido temporal", "Diferido vitalicio", "Dotal puro", "Dotal mixto", "Vitalicio"]:
+        if tipo_seguro in ["Diferido temporal", "Diferido vitalicio", "Dotal puro", "Dotal mixto"]:
             m = st.number_input("Diferimiento (m)", min_value=0, value=0)
 
-        if tipo_seguro in ["Dotal puro", "Dotal mixto", "Vitalicio"]:
-            k = st.number_input("Número de pagos (k)", min_value=1, value=10)
-
-        if tipo_seguro in ["Temporal", "Diferido temporal", "Diferido vitalicio"]:
-                    pagos_limitados = st.checkbox("¿Pagos limitados?")
-                    if pagos_limitados:
-                        t = st.number_input("Años de pago (t)", min_value=1, value=10)
+        if tipo_seguro in ["Temporal", "Diferido temporal", "Diferido vitalicio",
+                           "Dotal puro", "Dotal mixto", "Vitalicio"]:
+            pagos_limitados = st.checkbox("¿Pagos limitados?", key="chk_pl")
+            if pagos_limitados:
+                t = st.number_input("Años de pago (t)", min_value=1, value=10, key="t_input")
 
     st.divider()
 
@@ -400,7 +399,6 @@ with tab1:
             x = edad_act
             n = int(n) if n is not None else None
             m = int(m) if m is not None else 0
-            k = int(k) if k is not None else 1
             t = int(t) if t is not None else None
 
             # ── Temporal ──────────────────────────────────────────────────
@@ -569,7 +567,7 @@ with tab1:
                     c1.metric("Factor A",     f"{A:.6f}")
                     c2.metric("PNU",          f"${PNU:,.2f}")
                     c3.metric("PNN vitalicia",f"${PNN:,.2f}")
-                    
+
             st.session_state.cotizaciones.append({
                 "fecha":        datetime.now().strftime("%d/%m/%Y %H:%M"),
                 "nombre":       nombre if nombre else "Asegurado",
