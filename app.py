@@ -1,5 +1,4 @@
 """
-app.py — Interfaz Streamlit del Sistema Actuarial
 Requiere: TABLALX.txt y main.py en la misma carpeta
 Correr con: python -m streamlit run app.py
 """
@@ -20,10 +19,10 @@ if "cotizaciones" not in st.session_state:
 
 if "num_cotizaciones" not in st.session_state:
     st.session_state.num_cotizaciones = 0
-# ─────────────────────────────────────────────────────────────────────────────
+
 # CONFIGURACIÓN DE PÁGINA
-# ─────────────────────────────────────────────────────────────────────────────
-st.set_page_config(page_title="Sistema Actuarial", layout="wide")
+
+st.set_page_config(page_title="PIA CALCULO ACTUARIAL", layout="wide")
 st.markdown("""
 <style>
 
