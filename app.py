@@ -341,9 +341,9 @@ st.divider()
 tab1, tab2, tab3 = st.tabs(["Seguros de vida", "Anualidades", "Tabla actuarial"])
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# MÓDULO 1 — SEGUROS DE VIDA
-# ─────────────────────────────────────────────────────────────────────────────
+
+#  SEGUROS DE VIDA
+
 
 with tab1:
 
@@ -401,7 +401,7 @@ with tab1:
             m = int(m) if m is not None else 0
             t = int(t) if t is not None else None
 
-            # ── Temporal ──────────────────────────────────────────────────
+            # Temporal
             if tipo_seguro == "Temporal":
                 t_calc = t if t is not None else n
                 if x + n > 100:
@@ -423,7 +423,7 @@ with tab1:
                     c3.metric("PNN anual",        f"${PNN:,.2f}")
                     c4.metric("PNN pag. limit.",  f"${PNNL:,.2f}")
 
-            # ── Diferido temporal ─────────────────────────────────────────
+            #  Diferido temporal 
             elif tipo_seguro == "Diferido temporal":
                 if x + m + n > 100:
                     st.error("La edad final excede el límite de la tabla (100).")
@@ -446,7 +446,7 @@ with tab1:
                     c3.metric("PNN anual",           f"${PNN:,.2f}")
                     c4.metric("PNN pag. limit.",     f"${PNNL:,.2f}")
 
-            # ── Diferido vitalicio ────────────────────────────────────────
+            #  Diferido vitalicio 
             elif tipo_seguro == "Diferido vitalicio":
                 if x + m > 100:
                     st.error("La edad final excede el límite de la tabla (100).")
@@ -508,7 +508,7 @@ with tab1:
                         c2.metric("PNU",       f"${PNU:,.2f}")
                         c3.metric("PNN anual", f"${PNN:,.2f}")
 
-            # ── Dotal mixto ───────────────────────────────────────────────
+            #  Dotal mixto
 
             elif tipo_seguro == "Dotal mixto":
                 if x + n > 65:
@@ -541,7 +541,7 @@ with tab1:
                         c2.metric("PNU",       f"${PNU:,.2f}")
                         c3.metric("PNN anual", f"${PNN:,.2f}")
 
-            # ── Vitalicio ─────────────────────────────────────────────────
+            # Vitalicio 
             elif tipo_seguro == "Vitalicio":
                 i   = idx(x)
                 A   = T["Mx"][i] / T["Dx"][i]
@@ -575,11 +575,11 @@ with tab1:
                 "edad_act":     edad_act,
                 "sexo":         sexo,
                 "fumador":      fumador,
-                "tipo":         tipo_seguro,        # o tipo_ann para anualidades
+                "tipo":         tipo_seguro,        
                 "parametros": {
                     "Temporalidad": n if n else "—",
                     "Diferimiento": m if m else "—",
-                    "Núm. pagos":   k if k else "—",
+                    "Núm. pagos":   t if t else "—",
                 },
                 "resultados": {
                     "Valores Conmutados": f"{A:.6f}",
@@ -594,9 +594,9 @@ with tab1:
             st.error(f"Error inesperado: {e}")
         # Guardar en memoria
 
-# ─────────────────────────────────────────────────────────────────────────────
-# MÓDULO 2 — ANUALIDADES
-# ─────────────────────────────────────────────────────────────────────────────
+
+#  ANUALIDADES
+
 
 with tab2: 
 
@@ -643,7 +643,7 @@ with tab2:
             i_x  = idx(x)
             Dx   = T["Dx"][i_x]
 
-            # ── Temporal ──────────────────────────────────────────────────
+            # Temporal 
             if tipo_ann == "Temporal":
                 if anticipada:
                     # ✅ CORRECTO
@@ -656,7 +656,7 @@ with tab2:
                     factor = (T["Nx"][i_x1] - T["Nx"][i_xm1]) / Dx
                     tipo_str = "Temporal Vencida"
 
-            # ── Vitalicia ─────────────────────────────────────────────────
+            # Vitalicia
             elif tipo_ann == "Vitalicia":
                 if anticipada:
                     factor   = (T["Nx"][i_x]) / Dx
@@ -666,7 +666,7 @@ with tab2:
                     factor = T["Nx"][i_x1] / Dx
                     tipo_str = "Vitalicia Vencida"
 
-            # ── Diferida temporal ─────────────────────────────────────────
+            #  Diferida temporal 
             elif tipo_ann == "Diferida temporal":
                 if anticipada:
                     i_n   = idx(x + m_ann)
@@ -692,7 +692,7 @@ with tab2:
 
             prima = renta * factor
 
-# ── append ANUALIDADES — va dentro del try, después de calcular prima ──
+
             st.session_state.cotizaciones.append({
                 "fecha":      datetime.now().strftime("%d/%m/%Y %H:%M"),
                 "nombre":     nombre if nombre else "Asegurado",
@@ -719,9 +719,9 @@ with tab2:
             st.error(f"Error inesperado: {e}")
         # Guardar en memoria
 
-# ─────────────────────────────────────────────────────────────────────────────
-# MÓDULO 3 — TABLA ACTUARIAL
-# ─────────────────────────────────────────────────────────────────────────────
+
+# TABLA MORTALIDAD
+
 
 with tab3:
 
@@ -741,7 +741,7 @@ with tab3:
     })
 
     st.dataframe(df, use_container_width=True, hide_index=True, height=600)
-# ── EXPORTAR WORD ──────────────────────────────────────────────
+# EXPORTAR WORD
 if len(st.session_state.cotizaciones) > 0:
     st.divider()
 
@@ -759,7 +759,7 @@ if len(st.session_state.cotizaciones) > 0:
         AZUL_OSCURO = RGBColor(0x0A, 0x2F, 0x6E)
         AZUL_MEDIO  = RGBColor(0x15, 0x65, 0xC0)
 
-        # ── Portada ──────────────────────────────────────────
+        #  Portada 
         # Espacio superior
         doc.add_paragraph("")
         doc.add_paragraph("")
@@ -794,7 +794,7 @@ if len(st.session_state.cotizaciones) > 0:
         doc.add_paragraph("")
         doc.add_paragraph("")
 
-        # ── Tabla de contenido ────────────────────────────────
+        #  Tabla de contenido
         h_toc = doc.add_heading("Tabla de contenido", level=1)
         h_toc.runs[0].font.color.rgb = AZUL_OSCURO
 
@@ -836,7 +836,7 @@ if len(st.session_state.cotizaciones) > 0:
 
         doc.add_page_break()
 
-        # ── Una sección por cotización ────────────────
+      
         for i, c in enumerate(cotizaciones):
 
             # Título cotización
