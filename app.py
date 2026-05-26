@@ -640,7 +640,8 @@ with tab2:
             anticipada = modalidad == "Anticipada"
             n_ann = int(n_ann) if n_ann is not None else None
             m_ann = int(m_ann) if m_ann is not None else 0
-
+            tipo_str = ""   # ← agrega esta línea
+            factor   = 0.0  # ← y esta
             i_x  = idx(x)
             Dx   = T["Dx"][i_x]
 
@@ -692,6 +693,7 @@ with tab2:
                     tipo_str = "Diferida Vitalicia Vencida"
 
             prima = renta * factor
+
             st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
             st.caption(f"{tipo_str} · Edad actuarial: {x} años")
             c1, c2, c3 = st.columns(3)
