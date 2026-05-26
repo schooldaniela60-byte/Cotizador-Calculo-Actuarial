@@ -708,6 +708,11 @@ with tab2:
         c1.metric("Factor actuarial", f"{r['factor']:.4f}")
         c2.metric("Renta periódica",  f"${r['renta']:,.2f}")
         c3.metric("Prima única",      f"${r['prima']:,.2f}")
+    
+    # DEBUG
+    st.write(f"DEBUG: ann_result existe = {'ann_result' in st.session_state}")
+    if 'ann_result' in st.session_state:
+        st.write(f"DEBUG: contenido = {st.session_state['ann_result']}")
 
 with tab3:
 
