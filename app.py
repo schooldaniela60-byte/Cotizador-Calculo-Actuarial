@@ -633,13 +633,15 @@ with tab2:
 
     if st.button("Calcular", type="primary", use_container_width=True, key="btn_anualidades"):
         try:
-            x          = edad_act
+            st.warning(f"DEBUG: tipo_ann = '{tipo_ann}', modalidad = '{modalidad}'")
+            x = edad_act
             anticipada = modalidad == "Anticipada"
-            n_val      = int(n_ann) if n_ann is not None else 0
-            m_val      = int(m_ann) if m_ann is not None else 0
-            i_x        = idx(x)
-            Dx         = T["Dx"][i_x]
+            n_val= int(n_ann) if n_ann is not None else 0
+            m_val = int(m_ann) if m_ann is not None else 0
+            i_x= idx(x)
+            Dx= T["Dx"][i_x]
 
+            ...
             # ── Temporal ──────────────────────────────────────────────────
             if tipo_ann == "Temporal":
                 if anticipada:
