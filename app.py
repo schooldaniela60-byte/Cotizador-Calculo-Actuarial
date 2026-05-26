@@ -600,6 +600,10 @@ with tab1:
 
 
 # Inicializar resultado de anualidades
+# =====================================================================
+# REEMPLAZA ÚNICAMENTE EL BLOQUE DEL "WITH TAB2:" CON ESTE CÓDIGO
+# =====================================================================
+
 with tab2:
     st.subheader("Anualidades")
 
@@ -626,79 +630,89 @@ with tab2:
     st.divider()
 
     if st.button("Calcular", type="primary", use_container_width=True, key="btn_anualidades"):
-        x          = edad_act
-        anticipada = modalidad == "Anticipada"
-        n_val      = int(n_ann) if n_ann is not None else 0
-        m_val      = int(m_ann) if m_ann is not None else 0
-        i_x        = idx(x)
-        Dx         = T["Dx"][i_x]
-        factor     = 0.0
-        tipo_str   = ""
+        try:
+            x          = edad_act
+            anticipada = modalidad == "Anticipada"
+            n_val      = int(n_ann) if n_ann is not None else 0
+            m_val      = int(m_ann) if m_ann is not None else 0
+            i_x        = idx(x)
+            Dx         = T["Dx"][i_x]
+            factor     = 0.0
+            tipo_str   = ""
 
-        if tipo_ann == "Temporal":
-            if anticipada:
-                factor   = (T["Nx"][i_x] - T["Nx"][idx(x + n_val)]) / Dx
-                tipo_str = "Temporal Anticipada"
-            else:
-                factor   = (T["Nx"][idx(x+1)] - T["Nx"][idx(x + n_val + 1)]) / Dx
-                tipo_str = "Temporal Vencida"
+            if tipo_ann == "Temporal":
+                if anticipada:
+                    factor   = (T["Nx"][i_x] - T["Nx"][idx(x + n_val)]) / Dx
+                    tipo_str = "Temporal Anticipada"
+                else:
+                    factor   = (T["Nx"][idx(x+1)] - T["Nx"][idx(x + n_val + 1)]) / Dx
+                    tipo_str = "Temporal Vencida"
 
-        elif tipo_ann == "Vitalicia":
-            if anticipada:
-                factor   = T["Nx"][i_x] / Dx
-                tipo_str = "Vitalicia Anticipada"
-            else:
-                factor   = T["Nx"][idx(x+1)] / Dx
-                tipo_str = "Vitalicia Vencida"
+            elif tipo_ann == "Vitalicia":
+                if anticipada:
+                    factor   = T["Nx"][i_x] / Dx
+                    tipo_str = "Vitalicia Anticipada"
+                else:
+                    factor   = T["Nx"][idx(x+1)] / Dx
+                    tipo_str = "Vitalicia Vencida"
 
-        elif tipo_ann == "Diferida temporal":
-            if anticipada:
-                factor   = (T["Nx"][idx(x + m_val)] - T["Nx"][idx(x + m_val + n_val)]) / Dx
-                tipo_str = "Diferida Temporal Anticipada"
-            else:
-                factor   = (T["Nx"][idx(x + m_val + 1)] - T["Nx"][idx(x + m_val + n_val + 1)]) / Dx
-                tipo_str = "Diferida Temporal Vencida"
+            elif tipo_ann == "Diferida temporal":
+                if anticipada:
+                    factor   = (T["Nx"][idx(x + m_val)] - T["Nx"][idx(x + m_val + n_val)]) / Dx
+                    tipo_str = "Diferida Temporal Anticipada"
+                else:
+                    factor   = (T["Nx"][idx(x + m_val + 1)] - T["Nx"][idx(x + m_val + n_val + 1)]) / Dx
+                    tipo_str = "Diferida Temporal Vencida"
 
-        elif tipo_ann == "Diferida vitalicia":
-            if anticipada:
-                factor   = T["Nx"][idx(x + m_val)] / Dx
-                tipo_str = "Diferida Vitalicia Anticipada"
-            else:
-                factor   = T["Nx"][idx(x + m_val + 1)] / Dx
-                tipo_str = "Diferida Vitalicia Vencida"
+            elif tipo_ann == "Diferida vitalicia":
+                if anticipada:
+                    factor   = T["Nx"][idx(x + m_val)] / Dx
+                    tipo_str = "Diferida Vitalicia Anticipada"
+                else:
+                    factor   = T["Nx"][idx(x + m_val + 1)] / Dx
+                    tipo_str = "Diferida Vitalicia Vencida"
 
-        prima = renta * factor
+            prima = renta * factor
 
-        st.session_state["ann_result"] = {
-            "tipo_str": tipo_str,
-            "edad_act": x,
-            "factor":   factor,
-            "renta":    renta,
-            "prima":    prima,
-            "nombre":   nombre if nombre else "Asegurado"
-        }
-
-        st.session_state.cotizaciones.append({
-            "fecha":      datetime.now().strftime("%d/%m/%Y %H:%M"),
-            "nombre":     nombre if nombre else "Asegurado",
-            "edad_real":  edad_real,
-            "edad_act":   edad_act,
-            "sexo":       sexo,
-            "fumador":    fumador,
-            "tipo":       tipo_ann,
-            "parametros": {
-                "Renta periódica": f"${renta:,.2f}",
-                "Modalidad":       modalidad,
-                "Temporalidad":    f"{n_val} años" if n_val else "—",
-                "Diferimiento":    f"{m_val} años" if m_val else "—",
-            },
-            "resultados": {
-                "Factor actuarial": f"{factor:.4f}",
-                "Prima única":      f"${prima:,.2f}",
+            # Guardamos el resultado actual en el session_state
+            st.session_state["ann_result"] = {
+                "tipo_str": tipo_str,
+                "edad_act": x,
+                "factor":   factor,
+                "renta":    renta,
+                "prima":    prima,
+                "nombre":   nombre if nombre else "Asegurado"
             }
-        })
 
-    # ── Mostrar resultados SIEMPRE que exista ───────────────────
+            # Añadimos a la lista de todas las cotizaciones del historial
+            st.session_state.cotizaciones.append({
+                "fecha":      datetime.now().strftime("%d/%m/%Y %H:%M"),
+                "nombre":     nombre if nombre else "Asegurado",
+                "edad_real":  edad_real,
+                "edad_act":   edad_act,
+                "sexo":       sexo,
+                "fumador":    fumador,
+                "tipo":       tipo_ann,
+                "parametros": {
+                    "Renta periódica": f"${renta:,.2f}",
+                    "Modalidad":       modalidad,
+                    "Temporalidad":    f"{n_val} años" if n_val else "—",
+                    "Diferimiento":    f"{m_val} años" if m_val else "—",
+                },
+                "resultados": {
+                    "Factor actuarial": f"{factor:.4f}",
+                    "Prima única":      f"${prima:,.2f}",
+                }
+            })
+            
+            # Mensaje de éxito y forzar recarga para mostrar los resultados en pantalla
+            st.success("Cotización guardada con éxito.")
+            st.rerun()
+            
+        except Exception as e:
+            st.error(f"Error en los cálculos de anualidades: {e}")
+
+    # ── Mostrar resultados (Se renderiza inmediatamente gracias al st.rerun) ──
     if "ann_result" in st.session_state and st.session_state["ann_result"]:
         r = st.session_state["ann_result"]
         st.markdown("---")
@@ -708,11 +722,6 @@ with tab2:
         c1.metric("Factor actuarial", f"{r['factor']:.4f}")
         c2.metric("Renta periódica",  f"${r['renta']:,.2f}")
         c3.metric("Prima única",      f"${r['prima']:,.2f}")
-    
-    # DEBUG
-    st.write(f"DEBUG: ann_result existe = {'ann_result' in st.session_state}")
-    if 'ann_result' in st.session_state:
-        st.write(f"DEBUG: contenido = {st.session_state['ann_result']}")
 
 with tab3:
 
