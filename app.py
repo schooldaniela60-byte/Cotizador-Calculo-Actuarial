@@ -1,8 +1,3 @@
-"""
-app.py — Interfaz Streamlit del PIA Calculo Actuarial
-Requiere: TABLALX.txt y main.py en la misma carpeta
-Correr con: python -m streamlit run app.py
-"""
 
 import streamlit as st
 import pandas as pd
@@ -14,7 +9,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from datetime import datetime
 import io
 from docx.shared import Inches
-# Inicializar lista de cotizaciones en memoria
+
 if "cotizaciones" not in st.session_state:
     st.session_state.cotizaciones = []
 
@@ -315,7 +310,7 @@ st.progress(
     progreso,
     text=f"Cotización {completadas} de {total} completadas"
 )
-# ── Datos del asegurado (FUERA de cualquier tab) ──
+
 st.subheader("Datos del asegurado")
 col1, col2, col3, col4 = st.columns(4)
 
@@ -596,11 +591,6 @@ with tab1:
         # Guardar en memoria
 
 
-#  — ANUALIDADES
-# =====================================================================
-# REEMPLAZA TU BLOQUE DE "WITH TAB2:" POR ESTE COMPLETAMENTE CORREGIDO
-# =====================================================================
-
 with tab2:
     st.subheader("Anualidades")
 
@@ -764,6 +754,7 @@ with tab3:
     })
 
     st.dataframe(df, use_container_width=True, hide_index=True, height=600)
+    
 # ── EXPORTAR WORD 
 if len(st.session_state.cotizaciones) > 0:
     st.divider()
