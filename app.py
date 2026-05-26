@@ -421,7 +421,7 @@ with tab1:
                     c1, c2, c3, c4 = st.columns(4)
                     c1.metric("Valores Conmutados",        f"{A:.6f}")
                     c2.metric("PNU",             f"${PNU:,.2f}")
-                    c3.metric("PNN anual",        f"${PNN:,.2f}")
+                    c3.metric("PNN ",        f"${PNN:,.2f}")
                     c4.metric("PNN pag. limit.",  f"${PNNL:,.2f}")
 
             # ── Diferido temporal 
@@ -444,7 +444,7 @@ with tab1:
                     c1, c2, c3, c4 = st.columns(4)
                     c1.metric("Valores Conmutados", f"{A:.6f}")
                     c2.metric("PNU",                f"${PNU:,.2f}")
-                    c3.metric("PNN ",           f"${PNN:,.2f}")
+                    c3.metric("PNN",           f"${PNN:,.2f}")
                     c4.metric("PNN pag. limit.",     f"${PNNL:,.2f}")
 
             # ── Diferido vitalicio 
