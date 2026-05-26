@@ -725,7 +725,7 @@ with tab2:
                     "Prima única": f"${prima:,.2f}",
                 }
             })
-            st.success(f"✅ Cotización {len(st.session_state.cotizaciones)} guardada.")
+            st.success(f"Cotización {len(st.session_state.cotizaciones)} guardada.")
             
         except ValueError as e:
             st.error(f"Error en los datos: {e}")
