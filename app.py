@@ -381,7 +381,7 @@ with tab1:
             n = st.number_input("Temporalidad (n)", min_value=1, value=20)
 
         if tipo_seguro in ["Dotal puro", "Dotal mixto"]:
-            n = st.number_input("Temporalidad (n) — máx. hasta edad 65", min_value=1, value=20)
+            n = st.number_input("Temporalidad (n)", min_value=1, value=20)
 
         if tipo_seguro in ["Diferido temporal", "Diferido vitalicio", "Dotal puro", "Dotal mixto"]:
             m = st.number_input("Diferimiento (m)", min_value=0, value=0)
@@ -467,13 +467,13 @@ with tab1:
                         annL = (T["Nx"][i] - T["Nx"][it]) / T["Dx"][i]
                         PNNL = PNU / annL
                         c1, c2, c3, c4 = st.columns(4)
-                        c1.metric("Valores Conmutados", f"{A:.6f}")
+                        c1.metric("VALORES CONMUTADOS", f"{A:.6f}")
                         c2.metric("PNU",                f"${PNU:,.2f}")
                         c3.metric("PNN ",      f"${PNN:,.2f}")
                         c4.metric("PNN pag. limit.",    f"${PNNL:,.2f}")
                     else:
                         c1, c2, c3 = st.columns(3)
-                        c1.metric("Valores Conmutados", f"{A:.6f}")
+                        c1.metric("VALORES CONMUTADOS", f"{A:.6f}")
                         c2.metric("PNU",                f"${PNU:,.2f}")
                         c3.metric("PNN",      f"${PNN:,.2f}")
 
@@ -498,14 +498,14 @@ with tab1:
                         PNNL = PNU / annL
                         st.caption(f"Dotal Puro · Edad actuarial: {x} · Temporalidad: {n} · Pagos limitados: {t} años")
                         c1, c2, c3, c4 = st.columns(4)
-                        c1.metric("Factor A",       f"{A:.6f}")
+                        c1.metric("VALORES CONMUTADOS",       f"{A:.6f}")
                         c2.metric("PNU",            f"${PNU:,.2f}")
                         c3.metric("PNN",      f"${PNN:,.2f}")
                         c4.metric("PNN pag. limit.",f"${PNNL:,.2f}")
                     else:
                         st.caption(f"Dotal Puro · Edad actuarial: {x} · Temporalidad: {n}")
                         c1, c2, c3 = st.columns(3)
-                        c1.metric("Factor A",  f"{A:.6f}")
+                        c1.metric("VALORES CONMUTADOS",  f"{A:.6f}")
                         c2.metric("PNU",       f"${PNU:,.2f}")
                         c3.metric("PNN ", f"${PNN:,.2f}")
 
@@ -531,14 +531,14 @@ with tab1:
                         PNNL = PNU / annL
                         st.caption(f"Dotal Mixto · Edad actuarial: {x} · Temporalidad: {n} · Pagos limitados: {t} años")
                         c1, c2, c3, c4 = st.columns(4)
-                        c1.metric("Factor A",       f"{A:.6f}")
+                        c1.metric("VALORES CONMUTADOS",       f"{A:.6f}")
                         c2.metric("PNU",            f"${PNU:,.2f}")
                         c3.metric("PNN ",      f"${PNN:,.2f}")
                         c4.metric("PNN pag. limit.",f"${PNNL:,.2f}")
                     else:
                         st.caption(f"Dotal Mixto · Edad actuarial: {x} · Temporalidad: {n}")
                         c1, c2, c3 = st.columns(3)
-                        c1.metric("Factor A",  f"{A:.6f}")
+                        c1.metric("VALORES CONMUTADOS",  f"{A:.6f}")
                         c2.metric("PNU",       f"${PNU:,.2f}")
                         c3.metric("PNN ", f"${PNN:,.2f}")
 
@@ -558,14 +558,14 @@ with tab1:
                     PNNL = PNU / annL
                     st.caption(f"Vitalicio · Edad actuarial: {x} · Pagos limitados: {t} años")
                     c1, c2, c3, c4 = st.columns(4)
-                    c1.metric("Factor A",       f"{A:.6f}")
+                    c1.metric("VALORES CONMUTADOS",       f"{A:.6f}")
                     c2.metric("PNU",            f"${PNU:,.2f}")
                     c3.metric("PNN ",  f"${PNN:,.2f}")
                     c4.metric("PNN pag. limit.",f"${PNNL:,.2f}")
                 else:
                     st.caption(f"Vitalicio · Edad actuarial: {x}")
                     c1, c2, c3 = st.columns(3)
-                    c1.metric("Factor A",     f"{A:.6f}")
+                    c1.metric("VALORES CONMUTADOS",     f"{A:.6f}")
                     c2.metric("PNU",          f"${PNU:,.2f}")
                     c3.metric("PNN ",f"${PNN:,.2f}")
 
