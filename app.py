@@ -721,10 +721,11 @@ with tab2:
                 }
             })
             st.success(f"✅ Cotización {len(st.session_state.cotizaciones)} guardada.")        
+
         except ValueError as e:
-            st.error(f"Error en los datos: {e}")
+                    st.error(f"Error en los datos: {e}")
         except Exception as e:
-            st.error(f"Error inesperado: {e}")
+            st.error(f"Error inesperado: {type(e).__name__}: {e}")
         # Guardar en memoria
 
 
