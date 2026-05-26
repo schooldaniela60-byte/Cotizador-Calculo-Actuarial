@@ -599,6 +599,10 @@ with tab1:
 #  — ANUALIDADES
 
 
+# Inicializar resultado de anualidades
+if "ann_resultado" not in st.session_state:
+    st.session_state.ann_resultado = None
+
 with tab2:
     st.subheader("Anualidades")
 
@@ -606,11 +610,17 @@ with tab2:
 
     with col1:
         tipo_ann = st.selectbox("Tipo de anualidad", [
-            "Temporal", "Vitalicia", "Diferida temporal", "Diferida vitalicia"
+            "Temporal",
+            "Vitalicia",
+            "Diferida temporal",
+            "Diferida vitalicia"
         ])
         renta = st.number_input(
             "Renta periódica ($)",
-            min_value=0.0, value=10000.0, step=10000.0, format="%.2f"
+            min_value=0.0,
+            value=10000.0,
+            step=10000.0,
+            format="%.2f"
         )
         st.markdown(
             f"<p style='color:#1565C0; font-weight:600; font-size:15px; margin-top:-10px;'>${renta:,.2f}</p>",
@@ -627,13 +637,12 @@ with tab2:
 
     st.divider()
 
-    # --- 1. PROCESAMIENTO DEL BOTÓN (Solo cálculo y almacenamiento) ---
     if st.button("Calcular", type="primary", use_container_width=True, key="btn_anualidades"):
         try:
-            x = edad_act
+            x          = edad_act
             anticipada = modalidad == "Anticipada"
-            n_ann_val  = int(n_ann) if n_ann is not None else 0
-            m_ann_val  = int(m_ann) if m_ann is not None else 0
+            n_val      = int(n_ann) if n_ann is not None else 0
+            m_val      = int(m_ann) if m_ann is not None else 0
             i_x        = idx(x)
             Dx         = T["Dx"][i_x]
             factor     = 0.0
@@ -641,10 +650,10 @@ with tab2:
 
             if tipo_ann == "Temporal":
                 if anticipada:
-                    factor   = (T["Nx"][i_x] - T["Nx"][idx(x + n_ann_val)]) / Dx
+                    factor   = (T["Nx"][i_x] - T["Nx"][idx(x + n_val)]) / Dx
                     tipo_str = "Temporal Anticipada"
                 else:
-                    factor   = (T["Nx"][idx(x+1)] - T["Nx"][idx(x + n_ann_val + 1)]) / Dx
+                    factor   = (T["Nx"][idx(x+1)] - T["Nx"][idx(x + n_val + 1)]) / Dx
                     tipo_str = "Temporal Vencida"
 
             elif tipo_ann == "Vitalicia":
@@ -657,33 +666,32 @@ with tab2:
 
             elif tipo_ann == "Diferida temporal":
                 if anticipada:
-                    factor   = (T["Nx"][idx(x + m_ann_val)] - T["Nx"][idx(x + m_ann_val + n_ann_val)]) / Dx
+                    factor   = (T["Nx"][idx(x + m_val)] - T["Nx"][idx(x + m_val + n_val)]) / Dx
                     tipo_str = "Diferida Temporal Anticipada"
                 else:
-                    factor   = (T["Nx"][idx(x + m_ann_val + 1)] - T["Nx"][idx(x + m_ann_val + n_ann_val + 1)]) / Dx
+                    factor   = (T["Nx"][idx(x + m_val + 1)] - T["Nx"][idx(x + m_val + n_val + 1)]) / Dx
                     tipo_str = "Diferida Temporal Vencida"
 
             elif tipo_ann == "Diferida vitalicia":
                 if anticipada:
-                    factor   = T["Nx"][idx(x + m_ann_val)] / Dx
+                    factor   = T["Nx"][idx(x + m_val)] / Dx
                     tipo_str = "Diferida Vitalicia Anticipada"
                 else:
-                    factor   = T["Nx"][idx(x + m_ann_val + 1)] / Dx
+                    factor   = T["Nx"][idx(x + m_val + 1)] / Dx
                     tipo_str = "Diferida Vitalicia Vencida"
 
             prima = renta * factor
 
-            # Guardamos el resultado de la última simulación activa
             st.session_state.ann_resultado = {
                 "tipo_str": tipo_str,
                 "edad_act": x,
                 "factor":   factor,
                 "renta":    renta,
                 "prima":    prima,
-                "nombre_as": nombre if nombre else "Asegurado"
+                "nombre":   nombre if nombre else "Asegurado",
+                "num":      len(st.session_state.cotizaciones) + 1
             }
 
-            # Añadimos al registro general de cotizaciones
             st.session_state.cotizaciones.append({
                 "fecha":      datetime.now().strftime("%d/%m/%Y %H:%M"),
                 "nombre":     nombre if nombre else "Asegurado",
@@ -695,33 +703,29 @@ with tab2:
                 "parametros": {
                     "Renta periódica": f"${renta:,.2f}",
                     "Modalidad":       modalidad,
-                    "Temporalidad":    f"{n_ann_val} años" if n_ann_val else "—",
-                    "Diferimiento":    f"{m_ann_val} años" if m_ann_val else "—",
+                    "Temporalidad":    f"{n_val} años" if n_val else "—",
+                    "Diferimiento":    f"{m_val} años" if m_val else "—",
                 },
                 "resultados": {
                     "Factor actuarial": f"{factor:.4f}",
                     "Prima única":      f"${prima:,.2f}",
                 }
             })
-            
-            st.success(f"✅ Cotización {len(st.session_state.cotizaciones)} guardada.")
-            st.rerun() # Volvemos a ejecutar para actualizar de forma limpia la UI
-            
+
         except Exception as e:
             st.error(f"Error inesperado: {type(e).__name__}: {e}")
             st.session_state.ann_resultado = None
 
-    # --- 2. RENDERIZADO PERSISTENTE (Fuera del IF del botón) ---
-    if st.session_state.get("ann_resultado") is not None:
+    # ── Mostrar resultados FUERA del if button ──────────────────
+    if st.session_state.ann_resultado is not None:
         r = st.session_state.ann_resultado
-        st.write("---") # Una línea divisoria estética
-        st.subheader(f"Cotización — {r['nombre_as']}")
+        st.subheader(f"Cotización — {r['nombre']}")
         st.caption(f"{r['tipo_str']} · Edad actuarial: {r['edad_act']} años")
-        
         c1, c2, c3 = st.columns(3)
         c1.metric("Factor actuarial", f"{r['factor']:.4f}")
         c2.metric("Renta periódica",  f"${r['renta']:,.2f}")
         c3.metric("Prima única",      f"${r['prima']:,.2f}")
+        st.success(f"✅ Cotización {r['num']} guardada.")
 
 
 
