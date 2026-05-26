@@ -604,6 +604,10 @@ with tab1:
 # REEMPLAZA ÚNICAMENTE EL BLOQUE DEL "WITH TAB2:" CON ESTE CÓDIGO
 # =====================================================================
 
+# =====================================================================
+# REEMPLAZA NUEVAMENTE TU BLOQUE DE "WITH TAB2:" CON ESTA ENFOQUE CORREGIDO
+# =====================================================================
+
 with tab2:
     st.subheader("Anualidades")
 
@@ -612,23 +616,25 @@ with tab2:
     with col1:
         tipo_ann = st.selectbox("Tipo de anualidad", [
             "Temporal", "Vitalicia", "Diferida temporal", "Diferida vitalicia"
-        ])
+        ], key="sb_tipo_ann")
         renta = st.number_input(
             "Renta periódica ($)",
-            min_value=0.0, value=10000.0, step=10000.0, format="%.2f"
+            min_value=0.0, value=10000.0, step=10000.0, format="%.2f",
+            key="num_renta"
         )
         st.caption(f"${renta:,.2f}")
-        modalidad = st.radio("Modalidad", ["Anticipada", "Vencida"])
+        modalidad = st.radio("Modalidad", ["Anticipada", "Vencida"], key="rd_modalidad")
 
     with col2:
         n_ann, m_ann = None, None
         if tipo_ann in ["Temporal", "Diferida temporal"]:
-            n_ann = st.number_input("Temporalidad (m)", min_value=1, value=15)
+            n_ann = st.number_input("Temporalidad (m)", min_value=1, value=15, key="num_n_ann")
         if tipo_ann in ["Diferida temporal", "Diferida vitalicia"]:
-            m_ann = st.number_input("Diferimiento (n)", min_value=0, value=5)
+            m_ann = st.number_input("Diferimiento (n)", min_value=0, value=5, key="num_m_ann")
 
     st.divider()
 
+    # 1. PROCESAMIENTO DEL CLIC (Solo calcula y guarda, no dibuja)
     if st.button("Calcular", type="primary", use_container_width=True, key="btn_anualidades"):
         try:
             x          = edad_act
@@ -674,7 +680,7 @@ with tab2:
 
             prima = renta * factor
 
-            # Guardamos el resultado actual en el session_state
+            # Guardamos de forma persistente en la sesión el cálculo de Anualidades
             st.session_state["ann_result"] = {
                 "tipo_str": tipo_str,
                 "edad_act": x,
@@ -684,7 +690,7 @@ with tab2:
                 "nombre":   nombre if nombre else "Asegurado"
             }
 
-            # Añadimos a la lista de todas las cotizaciones del historial
+            # Guardamos en el historial global de cotizaciones
             st.session_state.cotizaciones.append({
                 "fecha":      datetime.now().strftime("%d/%m/%Y %H:%M"),
                 "nombre":     nombre if nombre else "Asegurado",
@@ -705,14 +711,12 @@ with tab2:
                 }
             })
             
-            # Mensaje de éxito y forzar recarga para mostrar los resultados en pantalla
-            st.success("Cotización guardada con éxito.")
-            st.rerun()
-            
+            st.success("Cotización 1 guardada.")
+
         except Exception as e:
             st.error(f"Error en los cálculos de anualidades: {e}")
 
-    # ── Mostrar resultados (Se renderiza inmediatamente gracias al st.rerun) ──
+    # 2. MOSTRAR RESULTADOS (Fuera del bloque condicional del botón)
     if "ann_result" in st.session_state and st.session_state["ann_result"]:
         r = st.session_state["ann_result"]
         st.markdown("---")
