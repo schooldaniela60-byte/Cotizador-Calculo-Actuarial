@@ -1,4 +1,5 @@
 """
+app.py — Interfaz Streamlit del Sistema Actuarial
 Requiere: TABLALX.txt y main.py en la misma carpeta
 Correr con: python -m streamlit run app.py
 """
@@ -22,17 +23,17 @@ if "num_cotizaciones" not in st.session_state:
 
 # CONFIGURACIÓN DE PÁGINA
 
-st.set_page_config(page_title="PIA CALCULO ACTUARIAL", layout="wide")
+st.set_page_config(page_title="Sistema Actuarial", layout="wide")
 st.markdown("""
 <style>
 
-/* ── FONDO GENERAL ─────────────────────────────────── */
+/* ── FONDO GENERAL ─────── */
 .stApp {
     background-color: #FFFFFF !important;
     background-image: none !important;
 }
 
-/* ── ENCABEZADO ────────────────────────────────────── */
+/* ── ENCABEZADO ────────── */
 h1 {
     color: #0A2F6E !important;
     font-weight: 800 !important;
@@ -44,19 +45,19 @@ h2, h3 {
     font-weight: 700 !important;
 }
 
-/* ── CAPTION ───────────────────────────────────────── */
+/* ── CAPTION  */
 div[data-testid="stCaptionContainer"] p {
     color: #5C7A9F !important;
 }
 
-/* ── LÍNEAS DIVISORAS ──────────────────────────────── */
+/* ── LÍNEAS DIVISORAS ──── */
 hr {
     border: none !important;
     border-top: 1.5px solid #BBDEFB !important;
     margin: 1.5rem 0 !important;
 }
 
-/* ── LABELS ────────────────────────────────────────── */
+/* ── LABELS ────────────── */
 label[data-testid="stWidgetLabel"] p,
 div[data-testid="stWidgetLabel"] p {
     color: #0A2F6E !important;
@@ -64,7 +65,7 @@ div[data-testid="stWidgetLabel"] p {
     font-size: 13px !important;
 }
 
-/* ── INPUTS ────────────────────────────────────────── */
+/* ── INPUTS ────────────── */
 input, textarea {
     color: #0A2F6E !important;
     font-weight: 600 !important;
@@ -78,17 +79,17 @@ input:focus, textarea:focus {
     box-shadow: 0 0 0 2px rgba(21,101,192,0.15) !important;
 }
 
-/* ── RADIO BUTTONS ─────────────────────────────────── */
+/* ── RADIO BUTTONS ─────── */
 input[type="radio"] {
     accent-color: #1565C0 !important;
 }
 
-/* ── CHECKBOX ──────────────────────────────────────── */
+/* ── CHECKBOX ──────────── */
 input[type="checkbox"] {
     accent-color: #1565C0 !important;
 }
 
-/* ── SELECTBOX ─────────────────────────────────────── */
+/* ── SELECTBOX ─────────── */
 div[data-baseweb="select"] > div {
     border: 1.5px solid #90CAF9 !important;
     border-radius: 8px !important;
@@ -140,7 +141,7 @@ div[data-baseweb="select"] [role="combobox"]:focus {
     outline: none !important;
 }
 
-/* ── MENÚ DESPLEGABLE ──────────────────────────────── */
+/* ── MENÚ DESPLEGABLE ──── */
 ul[data-baseweb="menu"],
 div[data-baseweb="popover"] {
     background-color: #FFFFFF !important;
@@ -165,7 +166,7 @@ li[role="option"][aria-selected="true"] {
     color: #0A2F6E !important;
     font-weight: normal !important; /* Mantiene normal la opción activa en la lista */
 }
-/* ── PESTAÑAS ──────────────────────────────────────── */
+/* ── PESTAÑAS ──────────── */
 div[data-baseweb="tab-list"] {
     background-color: #E3F2FD !important;
     border-radius: 10px !important;
@@ -194,7 +195,7 @@ button[data-baseweb="tab"]:hover {
     color: #0A2F6E !important;
 }
 
-/* ── BOTÓN CALCULAR ────────────────────────────────── */
+/* ── BOTÓN CALCULAR ────── */
 div[data-testid="stButton"] > button {
     background: linear-gradient(90deg, #1976D2, #0A2F6E) !important;
     color: #FFFFFF !important;
@@ -212,7 +213,7 @@ div[data-testid="stButton"] > button:hover {
     box-shadow: 0 4px 16px rgba(21,101,192,0.35) !important;
 }
 
-/* ── RESULTADOS ────────────────────────────────────── */
+/* ── RESULTADOS ────────── */
 [data-testid="stMetric"],
 [data-testid="metric-container"] {
     background: linear-gradient(135deg, #E3F2FD, #FFFFFF) !important;
@@ -237,13 +238,13 @@ div[data-testid="stButton"] > button:hover {
     font-size: 26px !important;
 }
 
-/* ── SIDEBAR ───────────────────────────────────────── */
+/* ── SIDEBAR  */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #E3F2FD, #FFFFFF) !important;
     border-right: 1.5px solid #90CAF9 !important;
 }
 
-/* ── NÚMERO INPUT ──────────────────────────────────── */
+/* ── NÚMERO INPUT ──────── */
 div[data-testid="stNumberInput"] input {
     color: #0A2F6E !important;
     font-weight: 600 !important;
@@ -259,9 +260,9 @@ div[data-testid="stNumberInput"] input {
 """, unsafe_allow_html=True)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+
 # CARGAR TABLA ACTUARIAL
-# ─────────────────────────────────────────────────────────────────────────────
+
 
 @st.cache_data
 def cargar_tabla():
@@ -289,9 +290,9 @@ T = cargar_tabla()
 def idx(edad):
     return T["edades"].index(int(edad))
 
-# ─────────────────────────────────────────────────────────────────────────────
+
 # ENCABEZADO
-# ─────────────────────────────────────────────────────────────────────────────
+
 def formatear_monto(key):
     val = st.session_state[key].replace(",", "").replace("$", "").strip()
     try:
@@ -336,12 +337,12 @@ edad_act = max(int(edad_real) - descuento, 18)
 
 st.divider()
 
-# ── Pestañas (DESPUÉS de los datos) ──
+# ── Pestañas 
 tab1, tab2, tab3 = st.tabs(["Seguros de vida", "Anualidades", "Tabla actuarial"])
 
 
 
-#  SEGUROS DE VIDA
+#  — SEGUROS DE VIDA
 
 
 with tab1:
@@ -395,12 +396,13 @@ with tab1:
 
     if st.button("Calcular", type="primary", use_container_width=True, key="btn_seguros"):
         try:
+
             x = edad_act
             n = int(n) if n is not None else None
             m = int(m) if m is not None else 0
             t = int(t) if t is not None else None
 
-            # Temporal
+            # ── Temporal ─
             if tipo_seguro == "Temporal":
                 t_calc = t if t is not None else n
                 if x + n > 100:
@@ -422,7 +424,7 @@ with tab1:
                     c3.metric("PNN anual",        f"${PNN:,.2f}")
                     c4.metric("PNN pag. limit.",  f"${PNNL:,.2f}")
 
-            #  Diferido temporal 
+            # ── Diferido temporal 
             elif tipo_seguro == "Diferido temporal":
                 if x + m + n > 100:
                     st.error("La edad final excede el límite de la tabla (100).")
@@ -445,7 +447,7 @@ with tab1:
                     c3.metric("PNN anual",           f"${PNN:,.2f}")
                     c4.metric("PNN pag. limit.",     f"${PNNL:,.2f}")
 
-            #  Diferido vitalicio 
+            # ── Diferido vitalicio 
             elif tipo_seguro == "Diferido vitalicio":
                 if x + m > 100:
                     st.error("La edad final excede el límite de la tabla (100).")
@@ -475,7 +477,7 @@ with tab1:
                         c2.metric("PNU",                f"${PNU:,.2f}")
                         c3.metric("PNN vitalicio",      f"${PNN:,.2f}")
 
-            # ── Dotal puro ────────────────────────────────────────────────
+            # ── Dotal puro ─
             elif tipo_seguro == "Dotal puro":
                 if x + n > 65:
                     st.error(f"La edad final no puede exceder 65 años. Edad actuarial {x} + temporalidad {n} = {x+n}.")
@@ -507,7 +509,7 @@ with tab1:
                         c2.metric("PNU",       f"${PNU:,.2f}")
                         c3.metric("PNN anual", f"${PNN:,.2f}")
 
-            #  Dotal mixto
+            # ── Dotal mixto 
 
             elif tipo_seguro == "Dotal mixto":
                 if x + n > 65:
@@ -540,7 +542,7 @@ with tab1:
                         c2.metric("PNU",       f"${PNU:,.2f}")
                         c3.metric("PNN anual", f"${PNN:,.2f}")
 
-            # Vitalicio 
+            # ── Vitalicio 
             elif tipo_seguro == "Vitalicio":
                 i   = idx(x)
                 A   = T["Mx"][i] / T["Dx"][i]
@@ -574,7 +576,7 @@ with tab1:
                 "edad_act":     edad_act,
                 "sexo":         sexo,
                 "fumador":      fumador,
-                "tipo":         tipo_seguro,        
+                "tipo":         tipo_seguro,        # o tipo_ann para anualidades
                 "parametros": {
                     "Temporalidad": n if n else "—",
                     "Diferimiento": m if m else "—",
@@ -594,7 +596,7 @@ with tab1:
         # Guardar en memoria
 
 
-#  ANUALIDADES
+#  — ANUALIDADES
 
 
 with tab2: 
@@ -642,10 +644,10 @@ with tab2:
             i_x  = idx(x)
             Dx   = T["Dx"][i_x]
 
-            # Temporal 
+            # ── Temporal ─
             if tipo_ann == "Temporal":
                 if anticipada:
-                    # ✅ CORRECTO
+
                     i_xm   = idx(x + n_ann)
                     factor = (T["Nx"][i_x] - T["Nx"][i_xm]) / Dx
                     tipo_str = "Temporal Anticipada"
@@ -655,7 +657,7 @@ with tab2:
                     factor = (T["Nx"][i_x1] - T["Nx"][i_xm1]) / Dx
                     tipo_str = "Temporal Vencida"
 
-            # Vitalicia
+            # ── Vitalicia 
             elif tipo_ann == "Vitalicia":
                 if anticipada:
                     factor   = (T["Nx"][i_x]) / Dx
@@ -665,7 +667,7 @@ with tab2:
                     factor = T["Nx"][i_x1] / Dx
                     tipo_str = "Vitalicia Vencida"
 
-            #  Diferida temporal 
+            # ── Diferida temporal 
             elif tipo_ann == "Diferida temporal":
                 if anticipada:
                     i_n   = idx(x + m_ann)
@@ -678,7 +680,7 @@ with tab2:
                     factor = (T["Nx"][i_n1] - T["Nx"][i_nm1]) / Dx
                     tipo_str = "Diferida Temporal Vencida"
 
-            # ── Diferida vitalicia ────────────────────────────────────────
+            # ── Diferida vitalicia 
             elif tipo_ann == "Diferida vitalicia":
                 if anticipada:
                     i_m    = idx(x + m_ann)
@@ -691,6 +693,13 @@ with tab2:
 
             prima = renta * factor
 
+
+            st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
+            st.caption(f"{tipo_str} · Edad actuarial: {x} años")
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Factor actuarial", f"{factor:.4f}")
+            c2.metric("Renta periódica",  f"${renta:,.2f}")
+            c3.metric("Prima única",      f"${prima:,.2f}")
 
             st.session_state.cotizaciones.append({
                 "fecha":      datetime.now().strftime("%d/%m/%Y %H:%M"),
@@ -719,7 +728,7 @@ with tab2:
         # Guardar en memoria
 
 
-# TABLA MORTALIDAD
+# MÓDULO 3 — TABLA ACTUARIAL
 
 
 with tab3:
@@ -740,7 +749,7 @@ with tab3:
     })
 
     st.dataframe(df, use_container_width=True, hide_index=True, height=600)
-# EXPORTAR WORD
+# ── EXPORTAR WORD 
 if len(st.session_state.cotizaciones) > 0:
     st.divider()
 
@@ -758,8 +767,7 @@ if len(st.session_state.cotizaciones) > 0:
         AZUL_OSCURO = RGBColor(0x0A, 0x2F, 0x6E)
         AZUL_MEDIO  = RGBColor(0x15, 0x65, 0xC0)
 
-        #  Portada 
-        # Espacio superior
+        # ── Portada 
         doc.add_paragraph("")
         doc.add_paragraph("")
 
@@ -793,7 +801,7 @@ if len(st.session_state.cotizaciones) > 0:
         doc.add_paragraph("")
         doc.add_paragraph("")
 
-        #  Tabla de contenido
+        # ── Tabla de contenido ────
         h_toc = doc.add_heading("Tabla de contenido", level=1)
         h_toc.runs[0].font.color.rgb = AZUL_OSCURO
 
@@ -835,7 +843,7 @@ if len(st.session_state.cotizaciones) > 0:
 
         doc.add_page_break()
 
-      
+        # ── Una sección por cotización ────────────────
         for i, c in enumerate(cotizaciones):
 
             # Título cotización
