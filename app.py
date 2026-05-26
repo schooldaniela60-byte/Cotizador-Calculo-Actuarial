@@ -650,13 +650,12 @@ with tab2:
                     tipo_str = "Temporal Vencida"
 
                 prima = renta * factor
-                st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
-                st.caption(f"{tipo_str} · Edad actuarial: {x} años")
-                c1, c2, c3 = st.columns(3)
-                c1.metric("Factor actuarial", f"{factor:.4f}")
-                c2.metric("Renta periódica",  f"${renta:,.2f}")
-                c3.metric("Prima única",       f"${prima:,.2f}")
-
+                st.write("### Cotización")
+                st.write(f"**Tipo:** {tipo_str}")
+                st.write(f"**Edad actuarial:** {x} años")
+                st.write(f"**Factor actuarial:** {factor:.4f}")
+                st.write(f"**Renta periódica:** ${renta:,.2f}")
+                st.write(f"**Prima única:** ${prima:,.2f}")
             # ── Vitalicia ─────────────────────────────────────────────────
             elif tipo_ann == "Vitalicia":
                 if anticipada:
