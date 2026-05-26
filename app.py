@@ -1,5 +1,5 @@
 """
-app.py — Interfaz Streamlit del Sistema Actuarial
+app.py — Interfaz Streamlit del PIA Calculo Actuarial
 Requiere: TABLALX.txt y main.py en la misma carpeta
 Correr con: python -m streamlit run app.py
 """
@@ -23,7 +23,7 @@ if "num_cotizaciones" not in st.session_state:
 
 # CONFIGURACIÓN DE PÁGINA
 
-st.set_page_config(page_title="Sistema Actuarial", layout="wide")
+st.set_page_config(page_title="PIA Calculo Actuarial", layout="wide")
 st.markdown("""
 <style>
 
@@ -600,9 +600,6 @@ with tab1:
 
 
 # Inicializar resultado de anualidades
-if "ann_resultado" not in st.session_state:
-    st.session_state.ann_resultado = None
-
 with tab2:
     st.subheader("Anualidades")
 
@@ -622,10 +619,7 @@ with tab2:
             step=10000.0,
             format="%.2f"
         )
-        st.markdown(
-            f"<p style='color:#1565C0; font-weight:600; font-size:15px; margin-top:-10px;'>${renta:,.2f}</p>",
-            unsafe_allow_html=True
-        )
+        st.caption(f"${renta:,.2f}")
         modalidad = st.radio("Modalidad", ["Anticipada", "Vencida"])
 
     with col2:
@@ -639,16 +633,14 @@ with tab2:
 
     if st.button("Calcular", type="primary", use_container_width=True, key="btn_anualidades"):
         try:
-
-            x= edad_act
+            x          = edad_act
             anticipada = modalidad == "Anticipada"
-            n_val= int(n_ann) if n_ann is not None else 0
-            m_val= int(m_ann) if m_ann is not None else 0
-            i_x = idx(x)
-            Dx= T["Dx"][i_x]
-            factor = 0.0
-            tipo_str = ""
+            n_val      = int(n_ann) if n_ann is not None else 0
+            m_val      = int(m_ann) if m_ann is not None else 0
+            i_x        = idx(x)
+            Dx         = T["Dx"][i_x]
 
+            # ── Temporal ──────────────────────────────────────────────────
             if tipo_ann == "Temporal":
                 if anticipada:
                     factor   = (T["Nx"][i_x] - T["Nx"][idx(x + n_val)]) / Dx
@@ -657,6 +649,15 @@ with tab2:
                     factor   = (T["Nx"][idx(x+1)] - T["Nx"][idx(x + n_val + 1)]) / Dx
                     tipo_str = "Temporal Vencida"
 
+                prima = renta * factor
+                st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
+                st.caption(f"{tipo_str} · Edad actuarial: {x} años")
+                c1, c2, c3 = st.columns(3)
+                c1.metric("Factor actuarial", f"{factor:.4f}")
+                c2.metric("Renta periódica",  f"${renta:,.2f}")
+                c3.metric("Prima única",       f"${prima:,.2f}")
+
+            # ── Vitalicia ─────────────────────────────────────────────────
             elif tipo_ann == "Vitalicia":
                 if anticipada:
                     factor   = T["Nx"][i_x] / Dx
@@ -665,6 +666,15 @@ with tab2:
                     factor   = T["Nx"][idx(x+1)] / Dx
                     tipo_str = "Vitalicia Vencida"
 
+                prima = renta * factor
+                st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
+                st.caption(f"{tipo_str} · Edad actuarial: {x} años")
+                c1, c2, c3 = st.columns(3)
+                c1.metric("Factor actuarial", f"{factor:.4f}")
+                c2.metric("Renta periódica",  f"${renta:,.2f}")
+                c3.metric("Prima única",       f"${prima:,.2f}")
+
+            # ── Diferida temporal ─────────────────────────────────────────
             elif tipo_ann == "Diferida temporal":
                 if anticipada:
                     factor   = (T["Nx"][idx(x + m_val)] - T["Nx"][idx(x + m_val + n_val)]) / Dx
@@ -673,6 +683,15 @@ with tab2:
                     factor   = (T["Nx"][idx(x + m_val + 1)] - T["Nx"][idx(x + m_val + n_val + 1)]) / Dx
                     tipo_str = "Diferida Temporal Vencida"
 
+                prima = renta * factor
+                st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
+                st.caption(f"{tipo_str} · Edad actuarial: {x} años")
+                c1, c2, c3 = st.columns(3)
+                c1.metric("Factor actuarial", f"{factor:.4f}")
+                c2.metric("Renta periódica",  f"${renta:,.2f}")
+                c3.metric("Prima única",       f"${prima:,.2f}")
+
+            # ── Diferida vitalicia ────────────────────────────────────────
             elif tipo_ann == "Diferida vitalicia":
                 if anticipada:
                     factor   = T["Nx"][idx(x + m_val)] / Dx
@@ -681,8 +700,14 @@ with tab2:
                     factor   = T["Nx"][idx(x + m_val + 1)] / Dx
                     tipo_str = "Diferida Vitalicia Vencida"
 
-            prima = renta * factor
-            num = len(st.session_state.cotizaciones) + 1
+                prima = renta * factor
+                st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
+                st.caption(f"{tipo_str} · Edad actuarial: {x} años")
+                c1, c2, c3 = st.columns(3)
+                c1.metric("Factor actuarial", f"{factor:.4f}")
+                c2.metric("Renta periódica",  f"${renta:,.2f}")
+                c3.metric("Prima única",       f"${prima:,.2f}")
+
             st.session_state.cotizaciones.append({
                 "fecha":      datetime.now().strftime("%d/%m/%Y %H:%M"),
                 "nombre":     nombre if nombre else "Asegurado",
@@ -702,16 +727,10 @@ with tab2:
                     "Prima única":      f"${prima:,.2f}",
                 }
             })
+            st.success(f"Cotización {len(st.session_state.cotizaciones)} guardada.")
 
-            # Métricas DESPUÉS del append
-            st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
-            st.caption(f"{tipo_str} · Edad actuarial: {x} años")
-            c1, c2, c3 = st.columns(3)
-            c1.metric("Factor actuarial", f"{factor:.4f}")
-            c2.metric("Renta periódica",  f"${renta:,.2f}")
-            c3.metric("Prima única",      f"${prima:,.2f}")
-            st.success(f"✅ Cotización {num} guardada.")
-
+        except ValueError as e:
+            st.error(f"Error en los datos: {e}")
         except Exception as e:
             st.error(f"Error inesperado: {type(e).__name__}: {e}")
 
