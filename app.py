@@ -444,7 +444,7 @@ with tab1:
                     c1, c2, c3, c4 = st.columns(4)
                     c1.metric("Valores Conmutados", f"{A:.6f}")
                     c2.metric("PNU",                f"${PNU:,.2f}")
-                    c3.metric("PNN anual",           f"${PNN:,.2f}")
+                    c3.metric("PNN ",           f"${PNN:,.2f}")
                     c4.metric("PNN pag. limit.",     f"${PNNL:,.2f}")
 
             # ── Diferido vitalicio 
@@ -469,13 +469,13 @@ with tab1:
                         c1, c2, c3, c4 = st.columns(4)
                         c1.metric("Valores Conmutados", f"{A:.6f}")
                         c2.metric("PNU",                f"${PNU:,.2f}")
-                        c3.metric("PNN vitalicio",      f"${PNN:,.2f}")
+                        c3.metric("PNN ",      f"${PNN:,.2f}")
                         c4.metric("PNN pag. limit.",    f"${PNNL:,.2f}")
                     else:
                         c1, c2, c3 = st.columns(3)
                         c1.metric("Valores Conmutados", f"{A:.6f}")
                         c2.metric("PNU",                f"${PNU:,.2f}")
-                        c3.metric("PNN vitalicio",      f"${PNN:,.2f}")
+                        c3.metric("PNN",      f"${PNN:,.2f}")
 
             # ── Dotal puro ─
             elif tipo_seguro == "Dotal puro":
@@ -500,14 +500,14 @@ with tab1:
                         c1, c2, c3, c4 = st.columns(4)
                         c1.metric("Factor A",       f"{A:.6f}")
                         c2.metric("PNU",            f"${PNU:,.2f}")
-                        c3.metric("PNN anual",      f"${PNN:,.2f}")
+                        c3.metric("PNN",      f"${PNN:,.2f}")
                         c4.metric("PNN pag. limit.",f"${PNNL:,.2f}")
                     else:
                         st.caption(f"Dotal Puro · Edad actuarial: {x} · Temporalidad: {n}")
                         c1, c2, c3 = st.columns(3)
                         c1.metric("Factor A",  f"{A:.6f}")
                         c2.metric("PNU",       f"${PNU:,.2f}")
-                        c3.metric("PNN anual", f"${PNN:,.2f}")
+                        c3.metric("PNN ", f"${PNN:,.2f}")
 
             # ── Dotal mixto 
 
@@ -533,14 +533,14 @@ with tab1:
                         c1, c2, c3, c4 = st.columns(4)
                         c1.metric("Factor A",       f"{A:.6f}")
                         c2.metric("PNU",            f"${PNU:,.2f}")
-                        c3.metric("PNN anual",      f"${PNN:,.2f}")
+                        c3.metric("PNN ",      f"${PNN:,.2f}")
                         c4.metric("PNN pag. limit.",f"${PNNL:,.2f}")
                     else:
                         st.caption(f"Dotal Mixto · Edad actuarial: {x} · Temporalidad: {n}")
                         c1, c2, c3 = st.columns(3)
                         c1.metric("Factor A",  f"{A:.6f}")
                         c2.metric("PNU",       f"${PNU:,.2f}")
-                        c3.metric("PNN anual", f"${PNN:,.2f}")
+                        c3.metric("PNN ", f"${PNN:,.2f}")
 
             # ── Vitalicio 
             elif tipo_seguro == "Vitalicio":
@@ -560,14 +560,14 @@ with tab1:
                     c1, c2, c3, c4 = st.columns(4)
                     c1.metric("Factor A",       f"{A:.6f}")
                     c2.metric("PNU",            f"${PNU:,.2f}")
-                    c3.metric("PNN vitalicia",  f"${PNN:,.2f}")
+                    c3.metric("PNN ",  f"${PNN:,.2f}")
                     c4.metric("PNN pag. limit.",f"${PNNL:,.2f}")
                 else:
                     st.caption(f"Vitalicio · Edad actuarial: {x}")
                     c1, c2, c3 = st.columns(3)
                     c1.metric("Factor A",     f"{A:.6f}")
                     c2.metric("PNU",          f"${PNU:,.2f}")
-                    c3.metric("PNN vitalicia",f"${PNN:,.2f}")
+                    c3.metric("PNN ",f"${PNN:,.2f}")
 
             st.session_state.cotizaciones.append({
                 "fecha":        datetime.now().strftime("%d/%m/%Y %H:%M"),
@@ -721,7 +721,7 @@ with tab2:
                     "Diferimiento": f"{m_val} años" if m_val else "—",
                 },
                 "resultados": {
-                    "Factor actuarial": f"{factor:.4f}",
+                    "VALORES CONMUTADOS": f"{factor:.4f}",
                     "Prima única": f"${prima:,.2f}",
                 }
             })
@@ -737,14 +737,14 @@ with tab2:
         res = st.session_state["ultimo_calculo_ann"]
         
         st.markdown("---")
-        st.subheader(f"Resultados de la Cotización — {res['nombre']}")
+        st.subheader(f"Cotización — {res['nombre']}")
         st.caption(f"{res['tipo_str']} · Edad actuarial: {res['edad_act']} años")
         
         # Crear las tres tarjetas de resultados en columnas
         c1, c2, c3 = st.columns(3)
-        c1.metric(label="Factor Actuarial", value=f"{res['factor']:.5f}")
-        c2.metric(label="Renta Periódica", value=f"${res['renta']:,.2f}")
-        c3.metric(label="Prima Única Total", value=f"${res['prima']:,.2f}")
+        c1.metric(label="VALORES CONMUTADOS", value=f"{res['factor']:.5f}")
+        c2.metric(label="RENTA PERIÓDICA", value=f"${res['renta']:,.2f}")
+        c3.metric(label="VALOR PRESENTE ANUALIDAD", value=f"${res['prima']:,.2f}")
 
 with tab3:
 
