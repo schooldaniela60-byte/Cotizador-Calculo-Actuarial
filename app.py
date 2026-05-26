@@ -629,7 +629,7 @@ with tab2:
 
     if st.button("Calcular", type="primary", use_container_width=True, key="btn_anualidades"):
         try:
-            x          = edad_act
+            x = edad_act
             anticipada = modalidad == "Anticipada"
             n_ann      = int(n_ann) if n_ann is not None else None
             m_ann      = int(m_ann) if m_ann is not None else 0
@@ -672,6 +672,25 @@ with tab2:
 
             prima = renta * factor
 
+            st.session_state.ann_resultado = {
+                "tipo_str": tipo_str,
+                "edad_act": x,
+                "factor":   factor,
+                "renta":    renta,
+                "prima":    prima,
+                "num":      len(st.session_state.cotizaciones)
+            }
+
+            if st.session_state.get("ann_resultado"):
+                r = st.session_state.ann_resultado
+                st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
+                st.caption(f"{r['tipo_str']} · Edad actuarial: {r['edad_act']} años")
+                c1, c2, c3 = st.columns(3)
+                c1.metric("Factor actuarial", f"{r['factor']:.4f}")
+                c2.metric("Renta periódica",  f"${r['renta']:,.2f}")
+                c3.metric("Prima única",      f"${r['prima']:,.2f}")
+                st.success(f"✅ Cotización {r['num']} guardada.")
+
             st.session_state.cotizaciones.append({
                 "fecha":      datetime.now().strftime("%d/%m/%Y %H:%M"),
                 "nombre":     nombre if nombre else "Asegurado",
@@ -693,29 +712,12 @@ with tab2:
             })
 
             # Guardar para mostrar después del re-render
-            st.session_state.ann_resultado = {
-                "tipo_str": tipo_str,
-                "edad_act": x,
-                "factor":   factor,
-                "renta":    renta,
-                "prima":    prima,
-                "num":      len(st.session_state.cotizaciones)
-            }
-
         except Exception as e:
             st.error(f"Error inesperado: {type(e).__name__}: {e}")
             st.session_state.ann_resultado = None
 
     # Mostrar resultado SIEMPRE que exista en session_state
-    if st.session_state.get("ann_resultado"):
-        r = st.session_state.ann_resultado
-        st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
-        st.caption(f"{r['tipo_str']} · Edad actuarial: {r['edad_act']} años")
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Factor actuarial", f"{r['factor']:.4f}")
-        c2.metric("Renta periódica",  f"${r['renta']:,.2f}")
-        c3.metric("Prima única",      f"${r['prima']:,.2f}")
-        st.success(f"✅ Cotización {r['num']} guardada.")
+
 
 
 
