@@ -692,8 +692,6 @@ with tab2:
                     tipo_str = "Diferida Vitalicia Vencida"
 
             prima = renta * factor
-
-
             st.subheader(f"Cotización — {nombre if nombre else 'Asegurado'}")
             st.caption(f"{tipo_str} · Edad actuarial: {x} años")
             c1, c2, c3 = st.columns(3)
